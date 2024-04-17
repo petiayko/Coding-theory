@@ -63,7 +63,7 @@ Coder::~Coder() {
 }
 
 void Coder::encode_file(const std::string &input_filename, const std::string &output_filename, bool silent) noexcept {
-
+    _get_file_to_write(output_filename) << encode(_get_file_data(input_filename), silent);
 }
 
 void Coder::encode_file(const std::string &input_filename, const std::string &output_filename) noexcept {
@@ -71,7 +71,7 @@ void Coder::encode_file(const std::string &input_filename, const std::string &ou
 }
 
 [[nodiscard]] std::string Coder::encode_file(const std::string &input_filename, bool silent) noexcept {
-
+    return encode(_get_file_data(input_filename), silent);
 }
 
 [[nodiscard]] std::string Coder::encode_file(const std::string &input_filename) noexcept {
@@ -112,4 +112,30 @@ void Coder::_encode(int li, int ri) {
         _encode(li, isp - 1);
         _encode(isp, ri);
     }
+}
+
+[[nodiscard]] inline std::string Coder::_get_file_data(const std::string &filename) {
+    std::string line;
+    std::string data;
+    auto file = _get_file_to_read(filename);
+    while (getline(file, line)) {
+        data += line;
+    }
+    return data;
+}
+
+[[nodiscard]] inline std::ifstream Coder::_get_file_to_read(const std::string &filename) {
+    std::ifstream file(filename, std::ios::in);
+    if (!file.is_open()) {
+        throw std::runtime_error{"Unable to open file " + filename};
+    }
+    return file;
+}
+
+[[nodiscard]] inline std::ofstream Coder::_get_file_to_write(const std::string &filename) {
+    std::ofstream file(filename, std::ios::in);
+    if (!file.is_open()) {
+        throw std::runtime_error{"Unable to open file " + filename};
+    }
+    return file;
 }

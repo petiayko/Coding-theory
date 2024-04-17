@@ -4,6 +4,6 @@
 
 int main() {
     Coder coder;
-    std::cout << coder.encode("Text to encode") << std::endl;
+    std::cout << coder.encode("Laudate Dominum, laudate Dominum, Omnes gentes, alleluia") << std::endl;
     return 0;
 }

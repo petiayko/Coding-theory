@@ -3,10 +3,11 @@
 
 #pragma once
 
+#include <fstream>
 #include <iostream>
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
 
 struct Node {
     char ch;
@@ -36,6 +37,12 @@ public:
 
 private:
     void _encode(int, int);
+
+    [[nodiscard]] inline static std::string _get_file_data(const std::string &);
+
+    [[nodiscard]] inline static std::ifstream _get_file_to_read(const std::string &);
+
+    [[nodiscard]] inline static std::ofstream _get_file_to_write(const std::string &);
 };
 
 #endif //CODING_THEORY_SHANNON_FANO_HPP
