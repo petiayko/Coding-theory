@@ -9,19 +9,19 @@
 #include <string>
 #include <vector>
 
-struct Node {
+struct SFNode {
     char ch;
     float p;
 };
 
-class Coder {
+class Shannon_Fano {
 private:
     int _alp_size{};
-    Node *_table{};
+    SFNode *_table{};
     std::map<char, std::string> _codes;
 
 public:
-    ~Coder();
+    ~Shannon_Fano();
 
     [[nodiscard]] std::string encode(const std::string &, bool) noexcept;
 

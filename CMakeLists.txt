@@ -4,9 +4,8 @@ project(Coding_theory)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(Coding_theory main.cpp
-        shannon_fano.cpp
-        shannon_fano.hpp
-        haffman.cpp
-        haffman.hpp
-        binary_tree.cpp
-        binary_tree.hpp)
+        source/shannon_fano.cpp
+        include/shannon_fano.hpp
+        source/haffman.cpp
+        include/haffman.hpp
+)

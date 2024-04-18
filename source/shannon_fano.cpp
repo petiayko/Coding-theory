@@ -1,12 +1,12 @@
-#include "shannon_fano.hpp"
+#include "../include/shannon_fano.hpp"
 
-Coder::~Coder() {
+Shannon_Fano::~Shannon_Fano() {
     _alp_size = 0;
     _codes.clear();
     delete[] _table;
 }
 
-[[nodiscard]] std::string Coder::encode(const std::string &plain_text, bool silent = false) noexcept {
+[[nodiscard]] std::string Shannon_Fano::encode(const std::string &plain_text, bool silent = false) noexcept {
     if (plain_text.empty()) {
         if (!silent) {
             std::cout << "Input string is empty" << std::endl;
@@ -22,7 +22,7 @@ Coder::~Coder() {
     }
     _alp_size = (int) freqs.size();
 
-    _table = new Node[_alp_size];
+    _table = new SFNode[_alp_size];
     auto f_total = float(total);
     int i;
     std::map<char, int>::iterator fi;
@@ -30,9 +30,9 @@ Coder::~Coder() {
         _table[i].ch = fi->first;
         _table[i].p = float(fi->second) / f_total;
     }
-    qsort(_table, _alp_size, sizeof(Node), [](const void *elem1, const void *elem2) {
-        const Node a = *(Node *) elem1;
-        const Node b = *(Node *) elem2;
+    qsort(_table, _alp_size, sizeof(SFNode), [](const void *elem1, const void *elem2) {
+        const SFNode a = *(SFNode *) elem1;
+        const SFNode b = *(SFNode *) elem2;
         if (a.p < b.p) {
             return 1;
         } else if (a.p > b.p) {
@@ -58,27 +58,27 @@ Coder::~Coder() {
     return result;
 }
 
-[[nodiscard]] std::string Coder::encode(const std::string &plain_text) noexcept {
-    return Coder::encode(plain_text, false);
+[[nodiscard]] std::string Shannon_Fano::encode(const std::string &plain_text) noexcept {
+    return Shannon_Fano::encode(plain_text, false);
 }
 
-void Coder::encode_file(const std::string &input_filename, const std::string &output_filename, bool silent) noexcept {
+void Shannon_Fano::encode_file(const std::string &input_filename, const std::string &output_filename, bool silent) noexcept {
     _get_file_to_write(output_filename) << encode(_get_file_data(input_filename), silent);
 }
 
-void Coder::encode_file(const std::string &input_filename, const std::string &output_filename) noexcept {
+void Shannon_Fano::encode_file(const std::string &input_filename, const std::string &output_filename) noexcept {
     encode_file(input_filename, output_filename, false);
 }
 
-[[nodiscard]] std::string Coder::encode_file(const std::string &input_filename, bool silent) noexcept {
+[[nodiscard]] std::string Shannon_Fano::encode_file(const std::string &input_filename, bool silent) noexcept {
     return encode(_get_file_data(input_filename), silent);
 }
 
-[[nodiscard]] std::string Coder::encode_file(const std::string &input_filename) noexcept {
+[[nodiscard]] std::string Shannon_Fano::encode_file(const std::string &input_filename) noexcept {
     return encode_file(input_filename, false);
 }
 
-void Coder::_encode(int li, int ri) {
+void Shannon_Fano::_encode(int li, int ri) {
     if (li == ri) {
         return;
     } else if (ri - li == 1) {
@@ -114,7 +114,7 @@ void Coder::_encode(int li, int ri) {
     }
 }
 
-[[nodiscard]] inline std::string Coder::_get_file_data(const std::string &filename) {
+[[nodiscard]] inline std::string Shannon_Fano::_get_file_data(const std::string &filename) {
     std::string line;
     std::string data;
     auto file = _get_file_to_read(filename);
@@ -124,7 +124,7 @@ void Coder::_encode(int li, int ri) {
     return data;
 }
 
-[[nodiscard]] inline std::ifstream Coder::_get_file_to_read(const std::string &filename) {
+[[nodiscard]] inline std::ifstream Shannon_Fano::_get_file_to_read(const std::string &filename) {
     std::ifstream file(filename, std::ios::in);
     if (!file.is_open()) {
         throw std::runtime_error{"Unable to open file " + filename};
@@ -132,7 +132,7 @@ void Coder::_encode(int li, int ri) {
     return file;
 }
 
-[[nodiscard]] inline std::ofstream Coder::_get_file_to_write(const std::string &filename) {
+[[nodiscard]] inline std::ofstream Shannon_Fano::_get_file_to_write(const std::string &filename) {
     std::ofstream file(filename, std::ios::in);
     if (!file.is_open()) {
         throw std::runtime_error{"Unable to open file " + filename};
