@@ -15,11 +15,6 @@ struct SFNode {
 };
 
 class Shannon_Fano {
-private:
-    int _alp_size{};
-    SFNode *_table{};
-    std::map<char, std::string> _codes;
-
 public:
     ~Shannon_Fano();
 
@@ -36,6 +31,10 @@ public:
     [[nodiscard]] std::string encode_file(const std::string &) noexcept;
 
 private:
+    int _alp_size{};
+    SFNode *_table{};
+    std::map<char, std::string> _codes;
+
     void _encode(int, int);
 
     [[nodiscard]] inline static std::string _get_file_data(const std::string &);
