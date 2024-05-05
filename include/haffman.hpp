@@ -2,6 +2,7 @@
 #define CODING_THEORY_HAFFMAN_HPP
 
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 #include <istream>
 #include <list>
@@ -28,6 +29,19 @@ struct HNode {
 };
 
 class Haffman {
+public:
+    [[nodiscard]] std::string compress(const std::string &, bool) noexcept;
+
+    [[nodiscard]] std::string compress(const std::string &) noexcept;
+
+    void compress_file(const std::string &, const std::string &, bool) noexcept;
+
+    void compress_file(const std::string &, const std::string &) noexcept;
+
+    [[nodiscard]] std::string compress_file(const std::string &, bool) noexcept;
+
+    [[nodiscard]] std::string compress_file(const std::string &) noexcept;
+
 private:
     typedef std::unordered_map<char, size_t> char_map_t;
     typedef std::vector<bool> code_t;
@@ -42,10 +56,11 @@ private:
 
     void build_code_table(HNode *node);
 
-public:
-    [[nodiscard]] std::string compress(const std::string&) noexcept;
+    [[nodiscard]] inline static std::string _get_file_data(const std::string &);
 
-    void decompress(std::istream &in_stream, std::ostream &out_stream);
+    [[nodiscard]] inline static std::ifstream _get_file_to_read(const std::string &);
+
+    [[nodiscard]] inline static std::ofstream _get_file_to_write(const std::string &);
 };
 
 #endif //CODING_THEORY_HAFFMAN_HPP

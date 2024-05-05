@@ -63,28 +63,29 @@ void Haffman::build_code_table(HNode *node) {
     code.pop_back();
 }
 
-
-[[nodiscard]] std::string Haffman::compress(const std::string& plain_text) noexcept {
-    for (const auto& ch: plain_text) {
+[[nodiscard]] std::string Haffman::compress(const std::string &plain_text, bool silent) noexcept {
+    for (const auto &ch: plain_text) {
         char_map[ch]++;
     }
 
     auto *tree = build_char_tree();
     build_code_table(tree);
 
-    for (const auto& i: code_table) {
-        std::cout << i.first << '\t' << char_map[i.first] << '\t';
-        for (auto j: i.second) {
-            std::cout << j;
+    if (!silent) {
+        for (const auto &i: code_table) {
+            std::cout << i.first << '\t' << char_map[i.first] << '\t';
+            for (auto j: i.second) {
+                std::cout << j;
+            }
+            std::cout << std::endl;
         }
-        std::cout << std::endl;
+
+        std::cout << "\nAlphabet size: " << char_map.size() << std::endl;
     }
 
-    std::cout << "\nAlphabet size: " << char_map.size() << std::endl;
-
     std::string encoded_text;
-    for (const auto& ch : plain_text) {
-        for (auto bit : code_table[ch]) {
+    for (const auto &ch: plain_text) {
+        for (auto bit: code_table[ch]) {
             encoded_text += std::to_string(bit);
         }
     }
@@ -92,39 +93,49 @@ void Haffman::build_code_table(HNode *node) {
     return encoded_text;
 }
 
-//void Haffman::decompress(std::istream &in_stream, std::ostream &out_stream) {
-//    unsigned long char_map_size;
-//    in_stream >> char_map_size;
-//    std::cout << "char map size: " << char_map_size << std::endl;
-//    for (unsigned long i = 0; i < char_map_size; ++i) {
-//        char symbol;
-//        size_t count;
-//        in_stream.get(symbol);
-//        in_stream >> count;
-//        char_map[symbol] = count;
-//        std::cout << symbol << ": " << count << std::endl;
-//    }
-//
-//    auto *node = build_char_tree();
-//
-//    // decode compressed data
-//    short count = 0;
-//    auto *it_node = node;
-//    char byte;
-//    in_stream.get(byte);
-//
-//    do {
-//        bool bit = (bool) (byte & (1 << (7 - count)));
-//        it_node = bit ? it_node->right_node : it_node->left_node;
-//        if (it_node->left_node == nullptr && it_node->right_node == nullptr) {
-//            out_stream << it_node->letter;
-//            it_node = node;
-//        }
-//
-//        count++;
-//        if (count == 8) {
-//            count = 0;
-//            in_stream.get(byte);
-//        }
-//    } while (!in_stream.eof());
-//}
+[[nodiscard]] std::string Haffman::compress(const std::string &plain_text) noexcept {
+    return compress(plain_text, false);
+}
+
+void
+Haffman::compress_file(const std::string &input_filename, const std::string &output_filename, bool silent) noexcept {
+    _get_file_to_write(output_filename) << compress(_get_file_data(input_filename), silent);
+}
+
+void Haffman::compress_file(const std::string &input_filename, const std::string &output_filename) noexcept {
+    compress_file(input_filename, output_filename, false);
+}
+
+[[nodiscard]] std::string Haffman::compress_file(const std::string &input_filename, bool silent) noexcept {
+    return compress(_get_file_data(input_filename), silent);
+}
+
+[[nodiscard]] std::string Haffman::compress_file(const std::string &input_filename) noexcept {
+    return compress_file(input_filename, false);
+}
+
+[[nodiscard]] inline std::string Haffman::_get_file_data(const std::string &filename) {
+    std::string line;
+    std::string data;
+    auto file = _get_file_to_read(filename);
+    while (getline(file, line)) {
+        data += line;
+    }
+    return data;
+}
+
+[[nodiscard]] inline std::ifstream Haffman::_get_file_to_read(const std::string &filename) {
+    std::ifstream file(filename, std::ios::in);
+    if (!file.is_open()) {
+        throw std::runtime_error{"Unable to open file " + filename};
+    }
+    return file;
+}
+
+[[nodiscard]] inline std::ofstream Haffman::_get_file_to_write(const std::string &filename) {
+    std::ofstream file(filename, std::ios::in);
+    if (!file.is_open()) {
+        throw std::runtime_error{"Unable to open file " + filename};
+    }
+    return file;
+}
