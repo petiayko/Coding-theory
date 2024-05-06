@@ -39,7 +39,7 @@ std::pair<statistic, statistic> get_stat(const std::string &data) {
 
 int main() {
     std::cout << "Shannon Fano\t\tHaffman" << std::endl;
-    for (size_t i = 10; i < 1000000000; i *= 10) {
+    for (size_t i = 10; i < 10000; i *= 10) {
         auto stat = get_stat(generate(i));
         std::cout << i << '\t' << stat.first.first << '\t' << stat.first.second << '\t' <<
                   stat.second.first << '\t' << stat.second.second << std::endl;

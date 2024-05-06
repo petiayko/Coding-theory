@@ -1,3 +1,6 @@
 .idea
 /cmake-build-debug
 test/
+.venv
+python_source/hamming/.ipynb_checkpoints
+python_source/crc/.ipynb_checkpoints
